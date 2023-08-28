@@ -12,9 +12,11 @@ public class SwarmManager : MonoBehaviour
     [SerializeField] private int enemyCols;
     [SerializeField] private float enemySpacing;
     [SerializeField] private float stepSize;
+    [SerializeField] private float downwardStepSize;
     [SerializeField] private float stepTime;
     [SerializeField] private float leftBoundaryX;
     [SerializeField] private float rightBoundaryX;
+    [SerializeField] private float direction;
 
     private void Start()
     {
@@ -50,6 +52,13 @@ public class SwarmManager : MonoBehaviour
     private void GenerateSwarm()
     {
         // Write code here...
+        for (var i = 0; i < enemyCols; i++)
+        {   
+            for (var j = 0; j < enemyRows; j++)
+            {
+                Instantiate(enemyTemplate, new Vector3(i * enemySpacing, j * enemySpacing, 0), Quaternion.identity, this.transform);
+            }
+        }
     }
 
     // Step the swarm across the screen, based on the current direction, or down
@@ -58,6 +67,17 @@ public class SwarmManager : MonoBehaviour
     {
         // Write code here...
         
+        this.transform.localPosition += new Vector3(this.stepSize, 0f, 0f) * direction;
+        if (this.transform.localPosition.x >= this.rightBoundaryX)
+        {
+            this.transform.localPosition = new Vector3(this.rightBoundaryX, this.transform.localPosition.y - this.downwardStepSize, 0f);
+            direction = -1;
+        }
+        else if (this.transform.localPosition.x <= this.leftBoundaryX)
+        {
+            this.transform.localPosition = new Vector3(this.leftBoundaryX, this.transform.localPosition.y - this.downwardStepSize, 0f);
+            direction = 1;
+        }
         // Tip: You probably want a private variable to keep track of the
         // direction the swarm is moving. You could alternate this between 1 and
         // -1 to serve as a vector multiplier when stepping the swarm.

@@ -21,6 +21,14 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             // Write your code to fire a projectile here...
+            GameObject clone = Instantiate(projectilePrefab, this.transform.position + new Vector3(0,1,0), Quaternion.identity);
+            clone.GetComponent<Rigidbody>().velocity = new Vector3(0, 10, 0);
+            Destroy(clone,5);
         }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        // Destroy the collided game object (including projectiles)
+        Destroy(other.gameObject);
     }
 }
